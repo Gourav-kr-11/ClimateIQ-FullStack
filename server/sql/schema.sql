@@ -1,0 +1,25 @@
+CREATE DATABASE IF NOT EXISTS climateiq CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE climateiq;
+
+CREATE TABLE IF NOT EXISTS users (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  email VARCHAR(190) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS footprints (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  user_id BIGINT UNSIGNED NOT NULL,
+  total_tonnes DECIMAL(10,3) NOT NULL,
+  transport_tonnes DECIMAL(10,3) NOT NULL,
+  flights_tonnes DECIMAL(10,3) NOT NULL,
+  diet_tonnes DECIMAL(10,3) NOT NULL,
+  home_tonnes DECIMAL(10,3) NOT NULL,
+  consumption_tonnes DECIMAL(10,3) NOT NULL,
+  inputs JSON NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_footprints_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  INDEX idx_footprints_user_date (user_id, created_at)
+);
